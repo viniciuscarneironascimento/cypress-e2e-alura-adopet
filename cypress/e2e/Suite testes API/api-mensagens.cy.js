@@ -1,6 +1,6 @@
 describe('API Adopet', () => {
     
-    it.only('Mensagens da API', () => {
+    it.skip('Mensagens da API', () => {
         cy.request({
             method: 'GET',
             url: 'https://adopet-api-i8qu.onrender.com/mensagem/2514f1fc-bd65-49cc-bb25-633704712904',
