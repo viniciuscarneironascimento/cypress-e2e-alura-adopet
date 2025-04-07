@@ -21,7 +21,7 @@ pipeline {
 
         stage('Executar Testes Cypress com Mochawesome') {
             steps {
-                bat 'npx cypress run --spec "cypress\\\\e2e\\\\**\\\\*.cy.js" --reporter mochawesome --reporter-options "reportDir=mochawesome-report;overwrite=true;html=true;json=true"'
+                bat 'npx cypress run --reporter mochawesome'
             }
         }
 
