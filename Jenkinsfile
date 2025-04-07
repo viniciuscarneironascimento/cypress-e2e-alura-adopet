@@ -2,9 +2,8 @@ pipeline {
     agent any
 
     environment {
+        // Opcional: define o diretório onde será executado
         PROJECT_DIR = 'cypress-tests'
-        REPORT_JSON = "${PROJECT_DIR}/mochawesome-report/mochawesome.json"
-        REPORT_HTML = "${PROJECT_DIR}/mochawesome-report/mochawesome.html"
     }
 
     stages {
@@ -17,7 +16,7 @@ pipeline {
         stage('Instalar Dependências') {
             steps {
                 dir("${PROJECT_DIR}") {
-                    sh 'npm ci'
+                    sh 'npm install'
                 }
             }
         }
@@ -29,39 +28,17 @@ pipeline {
                 }
             }
         }
-
-        stage('Exibir Erros (se houver)') {
-            when {
-                expression { currentBuild.currentResult == 'FAILURE' }
-            }
-            steps {
-                script {
-                    def errorSummary = sh(
-                        script: "jq '.results[]?.suites[]?.tests[]? | select(.fail == true) | \"\\(.title) - \\(.err.message)\"' ${REPORT_JSON}",
-                        returnStdout: true
-                    ).trim()
-                    if (errorSummary) {
-                        echo "🛑 *Resumo de Erros Encontrados:*"
-                        echo errorSummary
-                    } else {
-                        echo "✅ Nenhum erro detalhado encontrado no JSON."
-                    }
-                }
-            }
-        }
     }
 
     post {
         always {
-            echo '📦 Pipeline finalizada. Arquivando artefatos...'
+            echo 'Pipeline finalizada.'
             archiveArtifacts artifacts: "${PROJECT_DIR}/cypress/videos/**/*.mp4", allowEmptyArchive: true
             archiveArtifacts artifacts: "${PROJECT_DIR}/cypress/screenshots/**/*.png", allowEmptyArchive: true
-            archiveArtifacts artifacts: "${REPORT_JSON}", allowEmptyArchive: true
-            archiveArtifacts artifacts: "${REPORT_HTML}", allowEmptyArchive: true
         }
 
         failure {
-            echo '⚠️ A execução falhou. Veja os artefatos ou logs acima para detalhes.'
+            echo '⚠️ A execução falhou. Verifique os testes com erro.'
         }
 
         success {
@@ -69,4 +46,3 @@ pipeline {
         }
     }
 }
-
