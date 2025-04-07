@@ -3,8 +3,9 @@ pipeline {
 
     environment {
         PROJECT_DIR = 'cypress-tests'
-        REPORT_JSON = "${PROJECT_DIR}/mochawesome-report/mochawesome.json"
-        REPORT_HTML = "${PROJECT_DIR}/mochawesome-report/mochawesome.html"
+        REPORT_DIR = "${PROJECT_DIR}/mochawesome-report"
+        REPORT_JSON = "${REPORT_DIR}/mochawesome.json"
+        REPORT_HTML = "${REPORT_DIR}/mochawesome.html"
     }
 
     stages {
@@ -25,7 +26,7 @@ pipeline {
         stage('Executar Testes Cypress') {
             steps {
                 dir("${PROJECT_DIR}") {
-                    sh 'npx cypress run'
+                    sh 'npx cypress run --spec "cypress/e2e/**/*.cy.js" --reporter mochawesome --reporter-options reportDir=mochawesome-report,overwrite=true,html=true,json=true'
                 }
             }
         }
