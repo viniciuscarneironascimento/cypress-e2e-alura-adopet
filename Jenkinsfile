@@ -2,9 +2,8 @@ pipeline {
     agent any
 
     environment {
-        PROJECT_DIR = 'cypress-tests'
-        REPORT_JSON = "${PROJECT_DIR}/mochawesome-report/mochawesome.json"
-        REPORT_HTML = "${PROJECT_DIR}/mochawesome-report/mochawesome.html"
+        REPORT_JSON = "mochawesome-report/mochawesome.json"
+        REPORT_HTML = "mochawesome-report/mochawesome.html"
     }
 
     stages {
@@ -16,17 +15,13 @@ pipeline {
 
         stage('Instalar Dependências') {
             steps {
-                dir("${PROJECT_DIR}") {
-                    bat 'npm ci'
-                }
+                bat 'npm ci'
             }
         }
 
         stage('Executar Testes Cypress com Mochawesome') {
             steps {
-                dir("${PROJECT_DIR}") {
-                    bat 'npx cypress run'
-                }
+                bat 'npx cypress run --spec "cypress\\\\e2e\\\\**\\\\*.cy.js" --reporter mochawesome --reporter-options "reportDir=mochawesome-report;overwrite=true;html=true;json=true"'
             }
         }
 
@@ -36,16 +31,8 @@ pipeline {
             }
             steps {
                 script {
-                    def errorSummary = bat(
-                        script: "jq \".results[]?.suites[]?.tests[]? | select(.fail == true) | \\\"\\(.title) - \\(.err.message)\\\"\" ${REPORT_JSON}",
-                        returnStdout: true
-                    ).trim()
-                    if (errorSummary) {
-                        echo "🛑 *Resumo de Erros Encontrados:*"
-                        echo errorSummary
-                    } else {
-                        echo "✅ Nenhum erro detalhado encontrado no JSON."
-                    }
+                    echo "⚠️ (Opcional) Erros detalhados podem ser vistos no HTML do Mochawesome."
+                    // O jq provavelmente não está disponível no Windows sem instalação
                 }
             }
         }
@@ -54,8 +41,8 @@ pipeline {
     post {
         always {
             echo '📦 Pipeline finalizada. Arquivando artefatos...'
-            archiveArtifacts artifacts: "${PROJECT_DIR}/cypress/videos/**/*.mp4", allowEmptyArchive: true
-            archiveArtifacts artifacts: "${PROJECT_DIR}/cypress/screenshots/**/*.png", allowEmptyArchive: true
+            archiveArtifacts artifacts: "cypress/videos/**/*.mp4", allowEmptyArchive: true
+            archiveArtifacts artifacts: "cypress/screenshots/**/*.png", allowEmptyArchive: true
             archiveArtifacts artifacts: "${REPORT_JSON}", allowEmptyArchive: true
             archiveArtifacts artifacts: "${REPORT_HTML}", allowEmptyArchive: true
         }
