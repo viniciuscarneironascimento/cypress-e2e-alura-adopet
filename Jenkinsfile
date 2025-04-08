@@ -7,13 +7,13 @@ pipeline {
     }
 
     stages {
-        stage('Checkout do Código') {
+        stage('Checkout do Codigo') {
             steps {
                 git url: 'https://github.com/viniciuscarneironascimento/cypress-e2e-alura-adopet.git', branch: 'main'
             }
         }
 
-        stage('Instalar Dependências') {
+        stage('Instalar Dependencias') {
             steps {
                 bat 'npm ci'
             }
