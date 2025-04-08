@@ -21,7 +21,7 @@ pipeline {
 
         stage('Executar Testes Cypress com Mochawesome') {
             steps {
-                bat 'npx cypress run --reporter mochawesome'
+                bat 'npx cypress run --reporter mochawesome --no-color'
             }
         }
 
@@ -31,7 +31,7 @@ pipeline {
             }
             steps {
                 script {
-                    echo "⚠️ (Opcional) Erros detalhados podem ser vistos no HTML do Mochawesome."
+                    echo "(Opcional) Erros detalhados podem ser vistos no HTML do Mochawesome."
                     // O jq provavelmente não está disponível no Windows sem instalação
                 }
             }
@@ -40,7 +40,7 @@ pipeline {
 
     post {
         always {
-            echo '📦 Pipeline finalizada. Arquivando artefatos...'
+            echo 'Pipeline finalizada. Arquivando artefatos...'
             archiveArtifacts artifacts: "cypress/videos/**/*.mp4", allowEmptyArchive: true
             archiveArtifacts artifacts: "cypress/screenshots/**/*.png", allowEmptyArchive: true
             archiveArtifacts artifacts: "${REPORT_JSON}", allowEmptyArchive: true
@@ -48,11 +48,11 @@ pipeline {
         }
 
         failure {
-            echo '⚠️ A execução falhou. Veja os artefatos ou logs acima para detalhes.'
+            echo 'A execução falhou. Veja os artefatos ou logs acima para detalhes.'
         }
 
         success {
-            echo '✅ Todos os testes passaram com sucesso!'
+            echo 'Todos os testes passaram com sucesso!'
         }
     }
 }
