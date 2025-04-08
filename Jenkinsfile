@@ -21,7 +21,7 @@ pipeline {
 
         stage('Executar Testes Cypress com Mochawesome') {
             steps {
-                bat 'npx cypress run --reporter mochawesome --no-color'
+                bat 'npx cypress run --reporter mochawesome'
             }
         }
 
