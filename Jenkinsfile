@@ -29,11 +29,11 @@ pipeline {
             }
         }
 
-        stage('Gerar Relatório HTML Standalone') {
+        stage('Gerar Relatorio HTML Standalone') {
             steps {
                 bat '''
-                    npx mochawesome-merge cypress/results/*.json > mochawesome.json
-                    npx marge mochawesome.json --reportDir=cypress/results --reportFilename=mochawesome --inline
+                    npx mochawesome-merge cypress/results/*.html > mochawesome.html
+                    npx marge mochawesome.html --reportDir=cypress/results --reportFilename=mochawesome --inline
                 '''
             }
         }
