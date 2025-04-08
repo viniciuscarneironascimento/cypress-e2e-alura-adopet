@@ -34,6 +34,8 @@ pipeline {
                 bat '''
                     npx mochawesome-merge cypress/results/*.json > mochawesome.json
                     npx marge mochawesome.json --reportDir=cypress/results --reportFilename=mochawesome --inline
+                    rename "mochawesome.html" "mochawesome-report.html"
+                    move mochawesome-report.html cypress/results/mochawesome.html
                 '''
             }
         }
