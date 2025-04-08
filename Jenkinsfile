@@ -24,7 +24,7 @@ pipeline {
             steps {
                 bat '''
                     set FORCE_COLOR=0
-                    npx cypress run --reporter mochawesome --reporter-options reportDir=cypress/results,overwrite=false,html=false,json=true > run.log 2>&1
+                    npx cypress run --reporter mochawesome --reporter-options reportDir=cypress/results,overwrite=false,html=false,json=false > run.log 2>&1
                 '''
             }
         }
