@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         REPORT_DIR = "cypress/results"
-        REPORT_MERGED_JSON = "mochawesome.json"
+        MERGED_JSON = "mochawesome.json"
         REPORT_HTML = "${REPORT_DIR}/mochawesome.html"
     }
 
@@ -33,7 +33,7 @@ pipeline {
             steps {
                 bat '''
                     npx mochawesome-merge cypress/results/*.json > mochawesome.json
-                    npx marge mochawesome.json --reportDir=cypress/results --reportFilename=mochawesome
+                    npx marge mochawesome.json --reportDir=cypress/results --reportFilename=mochawesome --inline
                 '''
             }
         }
@@ -53,7 +53,7 @@ pipeline {
             echo 'Pipeline finalizada. Arquivando artefatos...'
             archiveArtifacts artifacts: "cypress/videos/**/*.mp4", allowEmptyArchive: true
             archiveArtifacts artifacts: "cypress/screenshots/**/*.png", allowEmptyArchive: true
-            archiveArtifacts artifacts: "cypress/results/*.json", allowEmptyArchive: true
+            archiveArtifacts artifacts: "${REPORT_DIR}/*.json", allowEmptyArchive: true
             archiveArtifacts artifacts: "${REPORT_HTML}", allowEmptyArchive: true
             archiveArtifacts artifacts: "run.log", allowEmptyArchive: true
         }
