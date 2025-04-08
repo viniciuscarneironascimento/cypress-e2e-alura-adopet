@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         REPORT_DIR = "cypress/results"
-        REPORT_JSON = "${REPORT_DIR}/mochawesome.json"
+        MERGED_JSON = "mochawesome.json"
         REPORT_HTML = "${REPORT_DIR}/mochawesome.html"
     }
 
@@ -29,14 +29,21 @@ pipeline {
             }
         }
 
+        stage('Gerar Relatorio HTML') {
+            steps {
+                bat '''
+                    npx mochawesome-merge cypress/results/*.json > mochawesome.json
+                    npx marge mochawesome.json --reportDir=cypress/results --reportFilename=mochawesome --inline
+                '''
+            }
+        }
+
         stage('Exibir Erros (se houver)') {
             when {
                 expression { currentBuild.currentResult == 'FAILURE' }
             }
             steps {
-                script {
-                    echo "A execução falhou. Verifique os artefatos gerados como o relatório HTML do Mochawesome e o log de execução (run.log)."
-                }
+                echo "A execução falhou. Verifique os artefatos gerados como o relatório HTML do Mochawesome e o log de execução (run.log)."
             }
         }
     }
@@ -47,7 +54,7 @@ pipeline {
             archiveArtifacts artifacts: "cypress/videos/**/*.mp4", allowEmptyArchive: true
             archiveArtifacts artifacts: "cypress/screenshots/**/*.png", allowEmptyArchive: true
             archiveArtifacts artifacts: "${REPORT_DIR}/*.json", allowEmptyArchive: true
-            archiveArtifacts artifacts: "${REPORT_DIR}/*.html", allowEmptyArchive: true
+            archiveArtifacts artifacts: "${REPORT_HTML}", allowEmptyArchive: true
             archiveArtifacts artifacts: "run.log", allowEmptyArchive: true
         }
 
