@@ -34,7 +34,7 @@ pipeline {
             }
             steps {
                 script {
-                    echo "🛑 A execução falhou. Verifique os artefatos gerados como o relatório HTML do Mochawesome e o log de execução (run.log)."
+                    echo "A execução falhou. Verifique os artefatos gerados como o relatório HTML do Mochawesome e o log de execução (run.log)."
                 }
             }
         }
@@ -42,7 +42,7 @@ pipeline {
 
     post {
         always {
-            echo '📦 Pipeline finalizada. Arquivando artefatos...'
+            echo 'Pipeline finalizada. Arquivando artefatos...'
             archiveArtifacts artifacts: "cypress/videos/**/*.mp4", allowEmptyArchive: true
             archiveArtifacts artifacts: "cypress/screenshots/**/*.png", allowEmptyArchive: true
             archiveArtifacts artifacts: "${REPORT_JSON}", allowEmptyArchive: true
@@ -51,11 +51,11 @@ pipeline {
         }
 
         failure {
-            echo '⚠️ A execução falhou. Veja os artefatos ou logs acima para detalhes.'
+            echo 'A execução falhou. Veja os artefatos ou logs acima para detalhes.'
         }
 
         success {
-            echo '✅ Todos os testes passaram com sucesso!'
+            echo 'Todos os testes passaram com sucesso!'
         }
     }
 }
