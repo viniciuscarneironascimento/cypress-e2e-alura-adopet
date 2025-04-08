@@ -24,7 +24,7 @@ pipeline {
             steps {
                 bat '''
                     set FORCE_COLOR=0
-                    npx cypress run > run.log 2>&1
+                    npx cypress run --reporter mochawesome --reporter-options reportDir=cypress/results,overwrite=false,html=false,json=true > run.log 2>&1
                 '''
             }
         }
@@ -34,8 +34,6 @@ pipeline {
                 bat '''
                     npx mochawesome-merge cypress/results/*.json > mochawesome.json
                     npx marge mochawesome.json --reportDir=cypress/results --reportFilename=mochawesome --inline
-                    rename "mochawesome.html" "mochawesome-report.html"
-                    move mochawesome-report.html cypress/results/mochawesome.html
                 '''
             }
         }
