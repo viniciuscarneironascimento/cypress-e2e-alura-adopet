@@ -1,5 +1,6 @@
 describe('API Adopet', () => {
-    
+
+    //Este teste gera erro. Remover skip para testar a pipeline do Jenkins
     it.skip('Mensagens da API', () => {
         cy.request({
             method: 'GET',
